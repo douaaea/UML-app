@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta charset="utf-8" />
+        <title>UML.CODE</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc."/>
+        <meta name="author" content="Zoyothemes"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="assets/images/favicon.ico">
+
+        <!-- App css -->
+        <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" id="app-style" />
+
+        <!-- Icons -->
+        <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+
+        <script type="text/javascript" src="https://unpkg.com/mxgraph/javascript/mxClient.js"></script>
+       <style>
+#main-content {
+    display: flex;
+    flex-grow: 1;
+    gap: 10px; 
+    padding: 10px;
+    box-sizing: border-box; 
+    height: calc(100vh - 60px - 50px); 
+    overflow: auto; 
+}
+
+#graphContainer {
+    flex: 3; 
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+pre#output {
+    flex: 1; 
+    background-color: #222;
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+       </style>
+    </head>
+
+    <!-- body start -->
+    <body data-menu-color="dark" data-sidebar="default">
+
+        <!-- Begin page -->
+        <div id="app-layout">
+             <!-- Topbar Start -->
+            <div class="topbar-custom">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between">
+                        <ul class="list-unstyled topnav-menu mb-0 d-flex align-items-center">
+                            <li>
+                                <button class="button-toggle-menu nav-link">
+                                    <i data-feather="menu" class="noti-icon"></i>
+                                </button>
+                            </li>
+                            <li class="d-none d-lg-block">
+                                
+                            </li>
+                        </ul>
+                        <ul class="list-unstyled topnav-menu mb-0 d-flex align-items-center">
+                
+                            <li class="dropdown notification-list topbar-dropdown">
+                                <a class="nav-link dropdown-toggle"  role="button" aria-haspopup="false" aria-expanded="false" onclick="openEditClassModal()">
+                                    <i data-feather="scissors" class="noti-icon"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-lg">
+        
+                                </div>
+                            </li>
+                            <li class="dropdown notification-list topbar-dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" aria-haspopup="false" aria-expanded="false" onclick="deleteSelectedClass()">
+                                    <i data-feather="trash-2" class="noti-icon"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-lg">
+        
+                                </div>
+                            </li>
+                            <li class="dropdown notification-list topbar-dropdown">
+                                <a class="nav-link dropdown-toggle"  role="button" aria-haspopup="false" aria-expanded="false" onclick="zoomIn()">
+                                    <i data-feather="zoom-in" class="noti-icon"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-lg">
+        
+                                </div>
+                            </li>
+                            <li class="dropdown notification-list topbar-dropdown">
+                                <a class="nav-link dropdown-toggle"  role="button" aria-haspopup="false" aria-expanded="false" onclick="zoomOut()">
+                                    <i data-feather="zoom-out" class="noti-icon"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-lg">
+        
+                                </div>
+                            </li>
+                            <li class="dropdown notification-list topbar-dropdown">
+                                <a class="nav-link dropdown-toggle" role="button" aria-haspopup="false" aria-expanded="false" onclick="resetZoom()">
+                                    <i data-feather="x-circle" class="noti-icon"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end dropdown-lg">
+        
+                                </div>
+                            </li>
+        
+                        </ul>
+                    </div>
+
+                </div>
+               
+            </div>
+            <!-- end Topbar -->
+
+
+            <!-- Left Sidebar Start -->
+            <div class="app-sidebar-menu" style="background-color: #4a4c4e;">
+                <div class="h-100" data-simplebar>
+
+                    <!--- Sidemenu -->
+                    <div id="sidebar-menu">
+
+                        <div class="logo-box">
+                            <a  class="logo logo-light">
+                                <span class="logo-sm">
+                                    <img src="assets/images/logo-sm.png" alt="" height="22">
+                                </span>
+                                <span class="logo-lg">
+                                    <img src="assets/images/logo-light.png" alt="" height="70">
+                                </span>
+                            </a>
+                            <a  class="logo logo-dark">
+                                <span class="logo-sm">
+                                    <img src="assets/images/logo-sm.png" alt="" height="22">
+                                </span>
+                                <span class="logo-lg">
+                                    <img src="assets/images/logo-dark.png" alt="" height="24">
+                                </span>
+                            </a>
+                        </div>
+
+                        <ul id="side-menu">
+
+                            <li class="menu-title">OUTILS
+                            </li>
+                            <li>
+                                <a href="#" data-bs-toggle="modal" onclick="openAddClassModal()">
+                                    <img src="assets/images/class1.png" alt="" height="40">
+                                    Classe
+                                    
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" data-bs-toggle="modal" onclick="openAssociationModal('Association')">
+                                    <img src="assets/images/association1.png" alt="" height="40">
+                                    Association
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank" data-bs-toggle="modal" onclick="openAggregationModal('Aggregation')">
+                                    <img src="assets/images/aggregation1.png" alt="" height="40">
+                                    Aggregation
+                                   
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank" data-bs-toggle="modal" onclick="openCompositionModal('Composition')">
+                                    <img src="assets/images/composition1.png" alt="" height="40">
+                                    Composition
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank" data-bs-toggle="modal" onclick="openGeneralizationModal('Generalization')">
+                                    <img src="assets/images/generalisation1.png" alt="" height="40">
+                                    Generalization
+                                </a>
+                            </li>
+                            <li class="menu-title">Code</li>
+                            <li>
+                                <a  href="#" target="_blank" data-bs-toggle="modal" onclick="generateJavaCode()" >
+                                    <img src="assets/images/java.png" alt="" height="40">
+                                    Convertir en Java
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank" data-bs-toggle="modal" onclick="generatePythonCode()">
+                                    <img src="assets/images/python.png" alt="" height="40">
+                                  Convertir en Python
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank" data-bs-toggle="modal" onclick="generatePhpCode()">
+                                    <img src="assets/images/phppng.png" alt="" height="40">
+                                  Convertir en Php
+                                </a>
+                            </li>
+
+                            
+
+                    </div>
+                    <!-- End Sidebar -->
+
+                    <div class="clearfix"></div>
+
+                </div>
+            </div>
+            <!-- Left Sidebar End -->
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+         
+           
+                <div class="content-page">
+                    <div class="content">
+    
+                        <!-- Start Content-->
+                        <div id="main-content">
+                            <div id="graphContainer"></div>
+                            <pre id="output"></pre>
+                        </div>
+                        
+                    </div> <!-- content -->
+                <!-- Footer Start -->
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col fs-13 text-muted text-center">
+                                &copy; <script>document.write(new Date().getFullYear())</script> - Réalisée par : <a href="#!" class="text-reset fw-semibold">AMEZIANE Douaa - KAMAL Aymane</a> 
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <!-- end Footer -->
+
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+        </div>
+        <!-- END wrapper -->
+         <!-- Add Class Modal -->
+    <div class="modal fade" id="addClassModal" tabindex="-1" aria-labelledby="addClassModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClassModalLabel">Ajouter une classe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="classForm">
+                        <div class="mb-3">
+                            <label for="className" class="form-label">Nom de la classe:</label>
+                            <input type="text" class="form-control" id="className" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="classAttributes" class="form-label">les attribus:</label>
+                            <textarea class="form-control" id="classAttributes" placeholder="Forme: visibilité nom:type"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="classMethods" class="form-label">Les méthodes:</label>
+                            <textarea class="form-control" id="classMethods" placeholder="Forme: visibilité nom:type"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" onclick="addClassFromModal()">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Edit Class Modal -->
+<div class="modal" id="editClassModal" tabindex="-1" aria-labelledby="editClassModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="editClassForm" onsubmit="event.preventDefault(); saveModifiedClass();">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editClassModalLabel">Modifier une classe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editClassName" class="form-label">Nom de la classe:</label>
+                        <input type="text" class="form-control" id="editClassName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editClassAttributes" class="form-label">Les attribus:</label>
+                        <textarea class="form-control" id="editClassAttributes" rows="3" placeholder="Forme: visibilité nom:type"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editClassMethods" class="form-label">Les méthodes:</label>
+                        <textarea class="form-control" id="editClassMethods" rows="3" placeholder="Forme: visibilité nom:type"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+    <!-- Association Modal -->
+    <div class="modal fade" id="addAssociationModal" tabindex="-1" aria-labelledby="addAssociationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAssociationModalLabel">Ajouter Association</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="associationForm">
+                        <label for="sourceCardinality">Cardinalité de la source:</label>
+                        <input type="text" id="sourceCardinality" class="form-control" />
+                        <label for="targetCardinality">Cardinalité de la destination:</label>
+                        <input type="text" id="targetCardinality" class="form-control" />
+                        <label for="roleSource">Rôle de la source:</label>
+                        <input type="text" id="roleSource" class="form-control" />
+                        <label for="roleTarget">Rôle de la destination:</label>
+                        <input type="text" id="roleTarget" class="form-control" />
+                        <label for="sourceClassAssociation">La classe source:</label>
+                        <input type="text" id="sourceClassAssociation" class="form-control" />
+                        <label for="targetClassAssociation">La classe destination:</label>
+                        <input type="text" id="targetClassAssociation" class="form-control" />
+                    </form>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" onclick="addAssociation()">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aggregation Modal -->
+    <div class="modal fade" id="addAggregationModal" tabindex="-1" aria-labelledby="addAggregationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAggregationModalLabel">Ajouter Aggregation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="aggregationForm">
+                        <label for="sourceClassAggregation">La classe source:</label>
+                        <input type="text" id="sourceClassAggregation" class="form-control" />
+                        <label for="targetClassAggregation">La classe destination:</label>
+                        <input type="text" id="targetClassAggregation" class="form-control" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" onclick="addAggregation()">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Composition Modal -->
+    <div class="modal fade" id="addCompositionModal" tabindex="-1" aria-labelledby="addCompositionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCompositionModalLabel">Ajouter Composition</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="compositionForm">
+                        <label for="sourceClassComposition">La classe source:</label>
+                        <input type="text" id="sourceClassComposition" class="form-control" />
+                        <label for="targetClassComposition">La classe destination:</label>
+                        <input type="text" id="targetClassComposition" class="form-control" />
+                    </form>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" onclick="addComposition()">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generalization Modal -->
+    <div class="modal fade" id="addGeneralizationModal" tabindex="-1" aria-labelledby="addGeneralizationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addGeneralizationModalLabel">Ajouter Generalisation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="generalizationForm">
+                        <label for="sourceClassGeneralization">La classe source:</label>
+                        <input type="text" id="sourceClassGeneralization" class="form-control" />
+                        <label for="targetClassGeneralization">La classe destination:</label>
+                        <input type="text" id="targetClassGeneralization" class="form-control" />
+                    </form>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary" onclick="addGeneralization()">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Vendor -->
+        <script src="script.js"></script>
+        <script src="assets/libs/jquery/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/simplebar/simplebar.min.js"></script>
+        <script src="assets/libs/node-waves/waves.min.js"></script>
+        <script src="assets/libs/waypoints/lib/jquery.waypoints.min.js"></script>
+        <script src="assets/libs/jquery.counterup/jquery.counterup.min.js"></script>
+        <script src="assets/libs/feather-icons/feather.min.js"></script>
+
+        <!-- App js-->
+        <script src="assets/js/app.js"></script>
+        
+    </body>
+</html>
